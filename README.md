@@ -4,8 +4,8 @@ The model is extremely simple so may be used in teaching bachelor course student
 
 Read the design_assignment.docx 
 
-The model and corresponding teaching methods will be described in details in a journal paper very soon.
-Look for this paper!
+The model and corresponding teaching methods will be described in details in journal paper titled "Interactive Engineering Education with Simplified Model of a Wind Power Plant Control" very soon.
+Look for this paper and read thoroughly!
 
 Sincerely yours,
 
