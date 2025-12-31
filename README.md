@@ -1,0 +1,1 @@
+This is a collection of files to simulate a wind turbine control in the Matlab/Simulink environment in engineering education. The model can be used in practical bachelor course classes as well as by master course students.
