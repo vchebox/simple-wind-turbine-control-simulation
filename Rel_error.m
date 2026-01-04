@@ -1,14 +1,10 @@
-function [sys,x0,str,ts,simStateCompliance] = Pitch_Coeff_setup_v3(t,x,theta,flag)
+   function [sys,x0,str,ts,simStateCompliance] = Rel_error(t,x,input,flag)
 % 
-% The function is written to realize assigned characteristics of Kpi  
-% which is the divisor (division factor) for the PI-regulator coefficients. 
-% This provide an indirect control of the pitch drive in function of power.
-% In this example, Kpi=2 if theta is low (low power) and Kpi=5 
-% if theta is more than 30 deg (high power). 
-% Linear increase of Kpi in intermediate pitch angles.
-% !!! Modify the mdlOutputs function below according to your case.
-
-
+% The function is intended to calculate the quadratic relative error
+%
+% Here, input(1)= reference power,
+% input(2)= actual power,
+% 
 %
 % Dispatch the flag. The switch function controls the calls to 
 % S-function routines at each simulation stage of the S-function.
@@ -26,7 +22,7 @@ switch flag
   %%%%%%%%%%%
   % Return the outputs of the S-function block.
   case 3
-    sys=mdlOutputs(t,x,theta);
+    sys=mdlOutputs(t,x,input);
 
   %%%%%%%%%%%%%%%%%%%
   % Unhandled flags %
@@ -60,8 +56,8 @@ function [sys,x0,str,ts,simStateCompliance] = mdlInitializeSizes()
 sizes = simsizes;
 sizes.NumContStates  = 0;
 sizes.NumDiscStates  = 0;
-sizes.NumOutputs     = -1;  % dynamically sized
-sizes.NumInputs      = -1;  % dynamically sized
+sizes.NumOutputs     = 1;  % Здесь изменено
+sizes.NumInputs      = 2;  % Здесь изменено
 sizes.DirFeedthrough = 1;   % has direct feedthrough
 sizes.NumSampleTimes = 1;
 
@@ -81,20 +77,18 @@ simStateCompliance = 'DefaultSimState';
 % Return the output vector for the S-function
 %=============================================================================
 %
-function sys = mdlOutputs(~,~,theta)
-%    if (theta <= 0) && (theta >= -2)
-    if (theta <= 0)
-        Kpi = 2;
-        
-    elseif (theta > 30)
-        Kpi = 5;
-        
-    else
-        Kpi = theta/10 + 2;
+function sys = mdlOutputs(t,~,input)
+Pref = input(1);
+P = input(2);
+ 
+    if (t <= 20 ) || (Pref < 1)                            
+        E = 0;       
+    else                                   
+        E = ((Pref-P)/Pref)^2;     
         
     end     
 
-sys =Kpi;
+sys = E;
 
 % end mdlOutputs
 
